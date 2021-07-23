@@ -26,9 +26,15 @@ class HomeFragment : BaseFragment() {
     ): View {
         logger.info("onCreateView savedInstanceState=$savedInstanceState")
         binding = HomeFragmentBinding.inflate(inflater, container, false)
+
+        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
+            viewModel.progress.collect {
+                binding.progressBar.visibility = if (it) View.VISIBLE else View.INVISIBLE
+            }
+        }
+
         viewLifecycleOwner.lifecycleScope.launchWhenResumed {
             viewModel.welcomeMessage.collect {
-                logger.debug("welcomeMessage=$it")
                 binding.textView.text = it
             }
         }
