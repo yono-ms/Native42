@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Native42</string>
+    <string name="button_start">START</string>
 </resources>
