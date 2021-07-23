@@ -1,6 +1,5 @@
 package com.example.native42
 
-import android.text.format.DateFormat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -8,7 +7,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import org.slf4j.LoggerFactory
-import java.text.SimpleDateFormat
 import java.util.*
 
 class HomeViewModel : ViewModel() {
@@ -27,16 +25,7 @@ class HomeViewModel : ViewModel() {
     init {
         viewModelScope.launch(Dispatchers.IO) {
             while (true) {
-                kotlin.runCatching {
-                    val locale = Locale.getDefault()
-                    val cal = Calendar.getInstance(locale).apply { time = Date() }
-                    val pattern = DateFormat.getBestDateTimePattern(locale, "yyyyMMMdEEEHHmmss")
-                    SimpleDateFormat(pattern, locale).format(cal.time)
-                }.onSuccess {
-                    _welcomeMessage.value = it
-                }.onFailure {
-                    logger.error("SimpleDateFormat", it)
-                }
+                _welcomeMessage.value = Date().toBestString()
                 delay(1000)
             }
         }
@@ -71,8 +60,13 @@ class HomeViewModel : ViewModel() {
 
     private val messages: Flow<String> = flow {
         (0..10).forEach {
-            emit("$it")
+            emit("$it ${Date().toBestString()}")
             delay(2000)
         }
+    }
+
+    val simpleCall: Flow<String> = flow {
+        delay(10000)
+        emit("success.")
     }
 }

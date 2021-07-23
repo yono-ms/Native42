@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Native42</string>
     <string name="button_start">START</string>
+    <string name="button_call">CALL</string>
+    <string name="dialog_title">Message</string>
+    <string name="dialog_message">Result : %1$s</string>
 </resources>

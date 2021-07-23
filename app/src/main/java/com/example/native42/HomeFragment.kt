@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
@@ -39,8 +40,8 @@ class HomeFragment : BaseFragment() {
             }
         }
 
-        binding.button.setOnClickListener {
-            logger.debug("button click.")
+        binding.buttonStart.setOnClickListener {
+            logger.debug("buttonStart click.")
             viewModel.start()
         }
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
@@ -52,7 +53,27 @@ class HomeFragment : BaseFragment() {
                 }
             }
         }
+
+        binding.buttonCall.setOnClickListener {
+            logger.debug("buttonCall click.")
+            viewLifecycleOwner.lifecycleScope.launchWhenResumed {
+                viewModel.simpleCall.collect {
+                    logger.debug(it)
+                    showMessageDialog(it)
+                }
+            }
+        }
         return binding.root
+    }
+
+    private fun showMessageDialog(it: String) {
+        findNavController().navigate(
+            HomeFragmentDirections.actionHomeFragmentToMessageDialog(
+                R.string.dialog_title,
+                R.string.dialog_message,
+                arrayOf(it)
+            )
+        )
     }
 
     class HomeAdapter :
